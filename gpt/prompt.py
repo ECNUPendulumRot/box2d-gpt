@@ -1,5 +1,5 @@
 from langchain.prompts.prompt import PromptTemplate
-from roscribe.parser import get_node_parser, get_topic_parser
+# from roscribe.parser import get_node_parser, get_topic_parser
 
 def get_polygon_prompt():
     template = """我想要生成多边形用于物理仿真。AI应该帮助我确定多边形的属性细节。
