@@ -191,21 +191,10 @@ class Car(Framework):
 
 class GPTFrameWork(Framework):
     def __init__(self):
-        super(GPTFrameWork, self).__init__()
-        ground = self.world.CreateStaticBody(
-            shapes=b2EdgeShape(vertices=[(-20, 0), (20, 0)])
-        )
 
-        x, y1, dx = 20, 0, 5
-        vertices = [0.25, 1, 4, 0, 0, -1, -2, -2, -1.25, 0]
-        for y2 in vertices * 2:  # iterate through vertices twice
-            ground.CreateEdgeFixture(
-                vertices=[(x, y1), (x + dx, y2)],
-                density=0,
-                friction=0.6,
-            )
-            y1 = y2
-            x += dx
+        super(GPTFrameWork, self).__init__()
+
+        self.world.gravity = [0, 0]
 
     def create_dynamic_body(self, vertices):
         return self.world.CreateDynamicBody(
@@ -228,16 +217,23 @@ class GPTFrameWork(Framework):
 
         fixtures = []
         for s_fixture in s_json["fixtures"]:
-            print(s_fixture["shape"])
-            print(s_fixture["vertices"])
-            if s_fixture["shape"] == "polygon":
+            print(s_fixture["shape-type"])
+            if s_fixture["shape-type"] == "polygon":
                 fixtures.append(b2FixtureDef(
                     shape=b2PolygonShape(vertices=s_fixture["vertices"]),
-                    density=s_fixture["density"]
+                    density=1
                 ))
-        if s_json["body_type"] == "dynamic":
+            elif s_fixture["shape-type"] == "circle":
+                shape = b2CircleShape()
+                shape.radius = s_fixture["radius"]
+                shape.pos = s_fixture["position"]
+                fixtures.append(b2FixtureDef(
+                    shape=shape,
+                    density=1
+                ))
+        if s_json["body-type"] == "dynamic":
             return self.world.CreateDynamicBody(
-                position=s_json["position"],
+                position=[0, 0],
                 fixtures=fixtures
             )
 
@@ -245,14 +241,34 @@ class GPTFrameWork(Framework):
 if __name__ == "__main__":
     app = GPTFrameWork()
 
-    json_example = ('{ "body_type":"dynamic", '
-                    '  "fixtures":[{'
-                    '                "shape":"polygon",'
-                    '                "vertices":[[0,0],[0,1],[1,1],[1,0]],'
-                    '                "density":1.0'      
-                    '               }],'
-                    '  "position":[0, 0]'
-                    '}')
+    json_example = ('''
+{
+    "body-type": "dynamic",
+    "fixtures": [
+        {
+            "shape-type": "polygon",
+            "vertices": [[0, 0], [0.5, 0.2], [1, 0], [0.8, 0.4], [0.6, 0.5]]
+        },
+        {
+            "shape-type": "polygon",
+            "vertices": [[0.6, 0.5], [0.8, 0.4], [1.8, 0.4], [2, 0.5]]
+        },
+        {
+            "shape-type": "polygon",
+            "vertices": [[1.8, 0.4], [2, 0.5], [2.2, 0.3], [2.1, 0.2]]
+        },
+        {
+            "shape-type": "circle",
+            "radius": 0.2,
+            "position": [0.7, 0]
+        },
+        {
+            "shape-type": "circle",
+            "radius": 0.2,
+            "position": [1.9, 0]
+        }
+    ]
+}''')
 
     json_loaded = json.loads(json_example)
     print(json_loaded["fixtures"])
