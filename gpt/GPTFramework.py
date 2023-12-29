@@ -231,11 +231,7 @@ class GPTFrameWork(Framework):
                     shape=shape,
                     density=1
                 ))
-        if s_json["body-type"] == "dynamic":
-            return self.world.CreateDynamicBody(
-                position=[0, 0],
-                fixtures=fixtures
-            )
+        return self.world.CreateDynamicBody(position=[0, 0], fixtures=fixtures)
 
 
 if __name__ == "__main__":
@@ -243,29 +239,20 @@ if __name__ == "__main__":
 
     json_example = ('''
 {
-    "body-type": "dynamic",
     "fixtures": [
         {
             "shape-type": "polygon",
-            "vertices": [[0, 0], [0.5, 0.2], [1, 0], [0.8, 0.4], [0.6, 0.5]]
-        },
-        {
-            "shape-type": "polygon",
-            "vertices": [[0.6, 0.5], [0.8, 0.4], [1.8, 0.4], [2, 0.5]]
-        },
-        {
-            "shape-type": "polygon",
-            "vertices": [[1.8, 0.4], [2, 0.5], [2.2, 0.3], [2.1, 0.2]]
+            "vertices": [[0, 0], [3, 0], [3, 1], [2.8, 1.2], [0.2, 1.2], [0, 1]]
         },
         {
             "shape-type": "circle",
-            "radius": 0.2,
-            "position": [0.7, 0]
+            "radius": 0.3,
+            "position": [0.6, 0.3]
         },
         {
             "shape-type": "circle",
-            "radius": 0.2,
-            "position": [1.9, 0]
+            "radius": 0.3,
+            "position": [2.4, 0.3]
         }
     ]
 }''')

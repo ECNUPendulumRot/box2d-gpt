@@ -11,7 +11,9 @@ def main(verbose=False):
     init_human_input = input("Human: ")
 
     polygon_prompt, polygon_end_str = get_polygon_prompt()
+
     polygon_memory = ConversationBufferMemory()
+
     polygon_chain = ConversationChain(
         llm=llm,
         prompt=polygon_prompt,
